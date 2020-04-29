@@ -55,7 +55,7 @@
 
 async function light(bool_arg){
 	    $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "viewlivestrea.php",
         type: "GET",
         data: { device: "light", command: "switch", value: bool_arg },
         dataType: "json",
@@ -84,7 +84,7 @@ async function zoom(){
     alert("Zoom value cannot be equal to zero");
   }else{
     $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "viewlivestream.php",
         type: "GET",
         data: { device: "motor", command: "move", value: x },
         dataType: "json",
@@ -115,7 +115,7 @@ async function timer(){
     alert("Timer value cant be under zero");
   }else{
     $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "./viewlivestream.php",
         type: "GET",
         data: { device: "light", command: "timer", value: x },
         dataType: "json",
@@ -157,23 +157,31 @@ async function timer(){
           <hr>
             <div class="UserInterface" style="display:inline-block; padding-left:5px; padding-right:5px; " >
             <h3>Microscope Controls</h3>
-            
-            <small>Zoom Level Control</small><br/>
-              <label for="zoomInput"><b>Zoom: </b></label>
-                <input type="text" id="zoomInput" size="10" placeholder="Zoom Lvl">
-                <button onclick="zoom()">Zoom</button><br />
-                
-                <small>Light Timer Control (Max: 3 Minutes)</small><br/>
-              <label for="timerInput"><b>Timer: </b></label>
-                <input type="text" type="number" min="1" max="5" size="10" placeholder="Minutes" id="timerInput">
-                <button onclick="timer()">Set Timer</button><br />
+            <div class="alert alert-danger" role="alert">If you or other users send multiple motor requests, the first one will be accepted and the rest will be ignored!</div>
+            <p>Zoom Level Control (Positive or Negative Integer)</p>
+              <div class="input-group mb-3">
+                <input type="number" class="form-control" id="zoomInput" size="10" placeholder="Zoom Level" step="1">
+                <div class="input-group-append">
+                <button onclick="zoom()"  class="btn btn-danger button-addon">Zoom</button><br />
+                </div>
+              </div>
+                <p>Light Timer Control (Max: 3 Minutes, Counted in fractions of a Minute)</p>
+                <div class="input-group mb-3">
+                <input type="number" class="form-control" value="0.1" min="0.1" max="3" step="0.1" size="10" placeholder="Minutes" id="timerInput">
+                <div class="input-group-append">
+                <button onclick="timer()" class="btn btn-warning">Set Timer</button><br />
+                </div>
+                <div class="btn-group-prepend btn-group-sm" role="group">
+                </div></div>
+                <div class="input-group mb-3">
+                <button onclick="light(1)" style="margin:5px;" class="btn btn-warning">Light On</button>
+                <button onclick="light(0)" style="margin:5px;" class="btn btn-dark">Light Off</button><br />
+                </div>
 
-                <button onclick="light(1)">Light On</button>
-                <button onclick="light(0)">Light Off</button><br />
             </div>
           <hr>
-          <button class="btn" name ="viewphoto-submit" type="submit" onclick="window.location.href='./viewphotos.php'">View Archived Photos</button>
-          <button class="btn" name ="googledocs-submit" type="submit" onclick="window.open('https://docs.google.com/forms/d/1Oa1WRS4LZLZQ9nuTjRTILW01rp9zHC7eG6cFWW6NvHs/edit')">Complete Experiment WorkSheet</button>
+          <button class="normal_btn" name ="viewphoto-submit" type="submit" onclick="window.location.href='./viewphotos.php'">View Archived Photos</button>
+          <button class="normal_btn" name ="googledocs-submit" type="submit" onclick="window.open('https://docs.google.com/forms/d/1Oa1WRS4LZLZQ9nuTjRTILW01rp9zHC7eG6cFWW6NvHs/edit')">Complete Experiment WorkSheet</button>
         </div>
       </div>
       <div class="card" style="margin-top: 30px; margin-bottom: 30px">
