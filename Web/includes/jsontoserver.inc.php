@@ -1,4 +1,4 @@
-<?php
+<?php/*
 $device = $_GET["device"]; # This needs to have input validation! Fortunately the Pi should has some, but that's not enough...
 $command = $_GET["command"];
 $value = $_GET["value"];
@@ -33,5 +33,5 @@ try
 #    echo '{"message" : ' . $e->getMessage() . '}'; # Use this to send the JSON {"message":"error message goes here"} which is what the web server sends as an error.
 }
 
-
+*/
 ?>
