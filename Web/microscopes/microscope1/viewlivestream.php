@@ -155,21 +155,21 @@ async function timer(){
             <iframe width="560" height="349" src="<?php echo $youtube ?>" frameborder="0" allowfullscreen></iframe>
           </div>
           <hr>
-            <div class="UserInterface" style="display: inline-block; padding-left:5px; padding-right:5px; " >
-              
+            <div class="UserInterface" style="display:inline-block; padding-left:5px; padding-right:5px; " >
+            <h3>Microscope Controls</h3>
+            
+            <small>Zoom Level Control</small><br/>
               <label for="zoomInput"><b>Zoom: </b></label>
-                <input type="text" id="zoomInput">
+                <input type="text" id="zoomInput" size="10" placeholder="Zoom Lvl">
                 <button onclick="zoom()">Zoom</button><br />
-
-              <button onclick="light(1)">Light On</button>
-              <button onclick="light(0)">Light Off</button><br />
-              
+                
+                <small>Light Timer Control (Max: 3 Minutes)</small><br/>
               <label for="timerInput"><b>Timer: </b></label>
-                <input type="text" type="number" min="1" max="5" placeholder="Minutes" id="timerInput">
+                <input type="text" type="number" min="1" max="5" size="10" placeholder="Minutes" id="timerInput">
+                <button onclick="timer()">Set Timer</button><br />
 
-              <button onclick="timer()">Timer Light On</button>
-
-              
+                <button onclick="light(1)">Light On</button>
+                <button onclick="light(0)">Light Off</button><br />
             </div>
           <hr>
           <button class="btn" name ="viewphoto-submit" type="submit" onclick="window.location.href='./viewphotos.php'">View Archived Photos</button>
