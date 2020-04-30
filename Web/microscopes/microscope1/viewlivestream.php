@@ -116,7 +116,7 @@ async function timer(){
     alert("Timer value cant be under zero");
   }else{
     $.ajax({
-        url: "./viewlivestream.php",
+        url: "viewlivestream.php",
         type: "GET",
         data: { device: "light", command: "timer", value: x },
         dataType: "json",
@@ -163,7 +163,7 @@ async function timer(){
               <div class="input-group mb-3">
                 <input type="number" class="form-control" id="zoomInput" size="10" placeholder="Zoom Level" step="1">
                 <div class="input-group-append">
-                <button onclick="zoom()"  class="btn btn-danger button-addon">Zoom</button><br />
+                <button onclick="zoom()"  class="btn-danger button-addon btn">Zoom</button><br />
                 </div>
               </div>
                 <p>Light Timer Control (Max: 3 Minutes, Counted in fractions of a Minute)</p>

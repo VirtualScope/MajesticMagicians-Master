@@ -86,7 +86,7 @@ body {
   transition: 0.3s;
 }
 
-.normal_btn:hover {
+.normal_btn:hover  {
   color: white;
   background: #49D49D;
 }

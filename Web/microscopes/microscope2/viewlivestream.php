@@ -22,7 +22,6 @@
   <link rel="stylesheet" href="../../styles/navbar-style.css">
 
 <?php
-
   //Get the microscope name and query the database for microscope information
   $microscopeName = getMyMicroscopeName(dirname(__FILE__));
   $sql = "SELECT experiment_name, course_name, availability, youtube, description, state FROM microscopes WHERE microscope_name = ?";
@@ -164,7 +163,7 @@ async function timer(){
               <div class="input-group mb-3">
                 <input type="number" class="form-control" id="zoomInput" size="10" placeholder="Zoom Level" step="1">
                 <div class="input-group-append">
-                <button onclick="zoom()"  class="btn btn-danger button-addon">Zoom</button><br />
+                <button onclick="zoom()"  class="btn-danger button-addon btn">Zoom</button><br />
                 </div>
               </div>
                 <p>Light Timer Control (Max: 3 Minutes, Counted in fractions of a Minute)</p>
