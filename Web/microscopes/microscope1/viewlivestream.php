@@ -55,7 +55,7 @@
 
 async function light(bool_arg){
 	    $.ajax({
-        url: "viewlivestrea.php",
+        url: "viewlivestream.php",
         type: "GET",
         data: { device: "light", command: "switch", value: bool_arg },
         dataType: "json",

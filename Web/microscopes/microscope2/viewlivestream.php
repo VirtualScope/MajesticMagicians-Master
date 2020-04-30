@@ -55,7 +55,7 @@
 
 async function light(bool_arg){
 	    $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "viewlivestream.php",
         type: "GET",
         data: { device: "light", command: "switch", value: bool_arg },
         dataType: "json",
@@ -84,7 +84,7 @@ async function zoom(){
     alert("Zoom value cannot be equal to zero");
   }else{
     $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "viewlivestream.php",
         type: "GET",
         data: { device: "motor", command: "move", value: x },
         dataType: "json",
@@ -115,7 +115,7 @@ async function timer(){
     alert("Timer value cant be under zero");
   }else{
     $.ajax({
-        url: "http://localhost/includes/jsontoserver.inc.php",
+        url: "./viewlivestream.php",
         type: "GET",
         data: { device: "light", command: "timer", value: x },
         dataType: "json",
@@ -155,25 +155,33 @@ async function timer(){
             <iframe width="560" height="349" src="<?php echo $youtube ?>" frameborder="0" allowfullscreen></iframe>
           </div>
           <hr>
-            <div class="UserInterface" style="display: inline-block; padding-left:5px; padding-right:5px; " >
-              
-              <label for="zoomInput"><b>Zoom: </b></label>
-                <input type="text" id="zoomInput">
-                <button onclick="zoom()">Zoom</button><br />
+            <div class="UserInterface" style="display:inline-block; padding-left:5px; padding-right:5px; " >
+            <h3>Microscope Controls</h3>
+            <div class="alert alert-danger" role="alert">If you or other users send multiple motor requests, the first one will be accepted and the rest will be ignored!</div>
+            <p>Zoom Level Control (Positive or Negative Integer)</p>
+              <div class="input-group mb-3">
+                <input type="number" class="form-control" id="zoomInput" size="10" placeholder="Zoom Level" step="1">
+                <div class="input-group-append">
+                <button onclick="zoom()"  class="btn btn-danger button-addon">Zoom</button><br />
+                </div>
+              </div>
+                <p>Light Timer Control (Max: 3 Minutes, Counted in fractions of a Minute)</p>
+                <div class="input-group mb-3">
+                <input type="number" class="form-control" value="0.1" min="0.1" max="3" step="0.1" size="10" placeholder="Minutes" id="timerInput">
+                <div class="input-group-append">
+                <button onclick="timer()" class="btn btn-warning">Set Timer</button><br />
+                </div>
+                <div class="btn-group-prepend btn-group-sm" role="group">
+                </div></div>
+                <div class="input-group mb-3">
+                <button onclick="light(1)" style="margin:5px;" class="btn btn-warning">Light On</button>
+                <button onclick="light(0)" style="margin:5px;" class="btn btn-dark">Light Off</button><br />
+                </div>
 
-              <button onclick="light(1)">Light On</button>
-              <button onclick="light(0)">Light Off</button><br />
-              
-              <label for="timerInput"><b>Timer: </b></label>
-                <input type="text" type="number" min="1" max="5" placeholder="Minutes" id="timerInput">
-
-              <button onclick="timer()">Timer Light On</button>
-
-              
             </div>
           <hr>
-          <button class="btn" name ="viewphoto-submit" type="submit" onclick="window.location.href='./viewphotos.php'">View Archived Photos</button>
-          <button class="btn" name ="googledocs-submit" type="submit" onclick="window.open('https://docs.google.com/forms/d/1Oa1WRS4LZLZQ9nuTjRTILW01rp9zHC7eG6cFWW6NvHs/edit')">Complete Experiment WorkSheet</button>
+          <button class="normal_btn" name ="viewphoto-submit" type="submit" onclick="window.location.href='./viewphotos.php'">View Archived Photos</button>
+          <button class="normal_btn" name ="googledocs-submit" type="submit" onclick="window.open('https://docs.google.com/forms/d/1Oa1WRS4LZLZQ9nuTjRTILW01rp9zHC7eG6cFWW6NvHs/edit')">Complete Experiment WorkSheet</button>
         </div>
       </div>
       <div class="card" style="margin-top: 30px; margin-bottom: 30px">
@@ -209,7 +217,47 @@ async function timer(){
 </div>
 
 <!-- Footer -->
-<?php include '../../footer.php' ?>
+<?php include('../../footer.php');
+
+include("config.php");
+if (isset($_GET["device"]))
+{
+  $device = $_GET["device"]; # This needs to have input validation! Fortunately the Pi should has some, but that's not enough...
+  $command = $_GET["command"];
+  $value = $_GET["value"];
+  $data;
+  $data_string;
+  try
+  {
+      if ($device === "motor")
+          $data = array("device" => $device, "command" => "move", "value" => intval($value));         
+      else if ($device === "light" && $command === "switch")
+          $data = array("device" => "light", "command" => "switch", "value" => boolval($value));         
+      else if ($device === "light" && $command === "timer")
+          $data = array("device" => "light", "command" => "timer", "value" => floatval($value));         
+      else
+      {
+          # echo '{"message" : "Invalid Input!"}'
+          exit();
+      }
+      $data_string = json_encode($data);
+      $ch = curl_init('http://' . $ip_address_of_this_raspberry_pi . ':5000/api/device/ '); 
+      curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
+      curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array(                                                                          
+          'Content-Type: application/json',                                                                                
+          'Content-Length: ' . strlen($data_string))                                                                       
+      );                                                                                                                                                                                                                      
+      curl_exec($ch); # Change to: echo curl_exec($ch); This can be used to return a value to the client, thus establishing a two-way communication.
+      curl_close($ch);
+  } catch(Exception $e)
+  {
+  #    echo '{"message" : ' . $e->getMessage() . '}'; # Use this to send the JSON {"message":"error message goes here"} which is what the web server sends as an error.
+  }
+}
+
+?>
 
 </body>
 </html>
