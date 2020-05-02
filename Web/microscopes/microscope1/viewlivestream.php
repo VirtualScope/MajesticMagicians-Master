@@ -242,7 +242,7 @@ if (isset($_GET["device"]))
           exit();
       }
       $data_string = json_encode($data);
-      $ch = curl_init('http://' . $ip_address_of_this_raspberry_pi . ':5000/api/device/ '); 
+      $ch = curl_init('http://' . $ip_address_of_this_raspberry_pi . '/api/device/ '); 
       curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");                                                                     
       curl_setopt($ch, CURLOPT_POSTFIELDS, $data_string);                                                                  
       curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);                                                                      
